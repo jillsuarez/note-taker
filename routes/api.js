@@ -30,4 +30,18 @@ router.post("/api/notes", (req, res)=> {
     }).then(response => res.send({msg: "Success"}));
 })
 
+// grab all notes filter method delete by id
+router.delete("/api/notes/:id", (req, res)=> {
+    readNotes().then(data => {
+        let notes= [];
+        notes = notes.concat(JSON.parse(data))
+        // console.log(notes);
+        let deleteNote = notes.findIndex(x => x.id === req.params.id);
+        console.log(deleteNote);
+        notes.splice(deleteNote, 1)
+        return notes
+    }).then(notes => {
+        return writeFile("db/db.json", JSON.stringify(notes));
+    }).then(() => res.send({msg: "Note Deleted"}));
+})
 module.exports = router;
